@@ -34,9 +34,9 @@ export class Renderer {
     const unit = 11;
     const context = new Context(this.target, this.options, unit);
     const bar = new StandardBar();
-    bar.render(context, new HorizontalLine(10, 210, 50));
+    bar.render(context, new HorizontalLine(10, 210, 50), {first: true});
     const note = new QuarterNote();
-    note.render(context, new Point(20, 55.5), {fill: 'red'})
+    note.render(context, new Point(40, 55.5), {fill: 'red'})
   }
 
   public clear(): void {
