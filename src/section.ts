@@ -2,8 +2,8 @@ import {Context, Notation} from "./context";
 import {Bar} from "./bar";
 
 export class Section {
-  public readonly context: Context;
-  public readonly notation: Notation;
+  private readonly context: Context;
+  private readonly notation: Notation;
   public readonly root: HTMLDivElement;
 
   public readonly bars: Array<Bar> = [];

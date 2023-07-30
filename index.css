@@ -16,3 +16,8 @@ body {
 
 .sheet .section .bar {
 }
+
+.sheet .section .bar .hover:hover {
+    fill: rgba(173, 216, 230, 0.5);
+    cursor: pointer;
+}

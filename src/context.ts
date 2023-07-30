@@ -1,5 +1,10 @@
 export class Context {
-  unit: number = 20;
+  public dx: number = 40;
+  public dy: number = 30;
+
+  public pad(): number {
+    return Math.min(this.dx, this.dy);
+  }
 }
 
 export class Notation {
