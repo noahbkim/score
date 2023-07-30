@@ -1,61 +1,69 @@
-import {Context} from "./renderer";
-import {HorizontalLine, HorizontalBox, HorizontalBounds} from "./geometry";
+import {Context, Notation} from "./context";
 import * as svg from './svg';
 
-export class BarArtifact {
-  public readonly box: HorizontalBox;
-  public readonly safe: HorizontalBounds;
+export class Bar {
+  public readonly context: Context;
+  public readonly notation: Notation;
+  public readonly root: SVGSVGElement;
+  public beats: number = 4;
+  public subdivisions: number = 2;
 
-  public constructor(box: HorizontalBox, safe: HorizontalBounds) {
-    this.box = box;
-    this.safe = safe;
+  public constructor(context: Context, notation: Notation) {
+    this.context = context;
+    this.notation = notation;
+    this.root = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    this.root.classList.add("bar");
+    this.render();
   }
-}
 
-export abstract class Bar {
-  public abstract render(context: Context, line: HorizontalLine, attributes?: Record<string, any>): BarArtifact;
-}
+  public dump(): any {
+    return {
+      notation: this.notation.dump(),
+    };
+  }
 
-export interface StandardBarOptions {
-  first: boolean;
-  last: boolean;
-}
+  public load(data: any): void {
+    this.notation.load(data.notation);
+  }
 
-export class StandardBar extends Bar {
-  public render(context: Context, line: HorizontalLine, options?: Partial<StandardBarOptions>): BarArtifact {
-    let top = line.y - (context.unit + 1) * 2 - 0.5;
-    for (let i = 0, y = top; i < 5; ++i, y += context.unit + 1) {
-      context.target.appendChild(svg.line({
-        x1: line.left,
-        y1: y,
-        x2: line.right,
-        y2: y,
-        stroke: 'black'
+  public render(): void {
+    const width = this.notation.beats * this.notation.subdivisions * this.context.unit;
+    const height = (this.notation.lines - 1) * this.context.unit + 1;
+    this.root.style.width = `${width}px`;
+    this.root.style.height = `${height}px`;
+    this.root.setAttribute("viewBox", `0 0 ${width} ${height}`);
+
+    for (let i = 0; i < this.notation.beats; ++i) {
+      const x = i * this.subdivisions * this.context.unit;
+      this.root.appendChild(svg.rect({
+        x: x,
+        y: 0,
+        width: 2,
+        height: height,
+        fill: "white",
+      }));
+
+      for (let j = 1; j < this.notation.subdivisions; ++i) {
+        const dx = j * this.context.unit
+        this.root.appendChild(svg.rect({
+          x: x + dx,
+          y: 0,
+          width: 1,
+          height: height,
+          fill: "white",
+        }));
+      }
+    }
+
+    for (let i = 0; i < this.notation.lines; ++i) {
+      const y = i * this.context.unit;
+      this.root.appendChild(svg.rect({
+        x: 0,
+        y: y,
+        width: width,
+        height: 1,
+        fill: "white",
       }));
     }
-    const height = 4 * context.unit + 5;
-
-    let first = line.left;
-    if (options?.first) {
-      context.target.appendChild(svg.rect({
-        x: first,
-        y: top,
-        width: 3,
-        height: height - 1,
-        stroke: 'black',
-      }));
-      first += 7;
-    }
-    context.target.appendChild(svg.line({
-      x1: first,
-      y1: top - 0.5,
-      x2: first,
-      y2: top - 0.5 + height,
-      stroke: 'black',
-    }));
-
-    return new BarArtifact(
-      line.box(height),
-      new HorizontalBounds(line.left + context.unit, line.right - context.unit));
   }
 }
