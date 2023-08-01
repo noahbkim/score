@@ -4,20 +4,112 @@ body {
     color: white;
 }
 
-.sheet {
-
+button {
+    border: 1px solid white;
+    border-radius: 0.25rem;
+    padding: 0.5rem 1rem;
+    background-color: transparent;
+    color: white;
+    cursor: pointer;
+    user-select: none;
 }
 
-.sheet .section {
+button:hover {
+    color: lightgray;
+    background-color: rgba(255, 255, 255, 3%);
+}
+
+.sheet {
+    display: block;
+}
+
+.sheet .sheet-tools {
+    display: flex;
+    flex-direction: row;
+    justify-content: right;
+}
+
+.sheet-tools * {
+    margin-top: -1px;
+    margin-left: -1px;
+    border-radius: 0;
+}
+
+.sheet-tools *:first-child {
+    border-bottom-left-radius: 0.25rem;
+}
+
+.sheet-tools *:last-child {
+    border-bottom-right-radius: 0.25rem;
+}
+
+.sheet .sections {
+    border: 1px solid white;
+    border-radius: 0.5rem;
+    border-bottom-right-radius: 0;
+    padding: 0.5rem;
+}
+
+.section .bars {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
+    align-items: center;
+
+    border: 1px solid white;
+    border-radius: 0.25rem;
+    border-bottom-right-radius: 0;
+    padding: 0.5rem;
 }
 
-.sheet .section .bar {
+.section .bar-tools {
+    display: flex;
+    flex-direction: column;
 }
 
-.sheet .section .bar .hover:hover {
+.section .bar-tools * {
+    flex-basis: 0;
+    flex-grow: 1;
+    border: 1px solid white;
+    border-radius: 0;
+}
+
+.section .bar-tools * + * {
+    margin-top: -1px;
+}
+
+.section .bar-tools *:first-child {
+    border-top-right-radius: 0.25rem;
+}
+
+.section .bar-tools *:last-child {
+    border-bottom-right-radius: 0.25rem;
+}
+
+.section .bar {
+}
+
+.bar .hover:hover {
     fill: rgba(173, 216, 230, 0.5);
     cursor: pointer;
+}
+
+.section .section-tools {
+    display: flex;
+    flex-direction: row;
+    justify-content: right;
+}
+
+.section-tools * {
+    margin-top: -1px;
+    margin-left: -1px;
+    border-radius: 0;
+}
+
+.section-tools *:first-child {
+    border-bottom-left-radius: 0.25rem;
+}
+
+.section-tools *:last-child {
+    border-bottom-right-radius: 0.25rem;
 }

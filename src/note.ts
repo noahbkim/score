@@ -1,23 +1,55 @@
 import {Context} from "./context";
 import * as svg from './svg';
 
-export enum Symbol {
-  NONE,
-  LEFT_SLASH,
-  RIGHT_SLASH,
-  X,
-  HOLLOW_CIRCLE,
-  FILLED_CIRCLE,
-  HOLLOW_SQUARE,
-  FILLED_SQUARE,
-}
+const SYMBOLS: Array<(context: Context) => SVGElement | null> = [
+  // No symbol
+  () => null,
+  // Circle
+  (context: Context) => svg.circle({
+    cx: 0,
+    cy: 0,
+    r: context.pad() * 0.4,
+    fill: "transparent",
+    stroke: "white",
+    "stroke-width": "2px",
+  }),
+  // Square
+  (context: Context) => svg.rect({
+    x: -context.pad() * 0.4,
+    y: -context.pad() * 0.4,
+    width: context.pad() * 0.8,
+    height: context.pad() * 0.8,
+    fill: "transparent",
+    stroke: "white",
+    "stroke-width": "2px",
+  }),
+  // Right
+  (context: Context) => svg.line({
+    x1: -context.pad() * 0.4,
+    y1: -context.pad() * 0.4,
+    x2: context.pad() * 0.4,
+    y2: context.pad() * 0.4,
+    stroke: "white",
+    "stroke-width": "4px",
+  }),
+  // Left
+  (context: Context) => svg.line({
+    x1: -context.pad() * 0.4,
+    y1: context.pad() * 0.4,
+    x2: context.pad() * 0.4,
+    y2: -context.pad() * 0.4,
+    stroke: "white",
+    "stroke-width": "4px",
+  }),
+];
 
 export class Note {
   public readonly context: Context;
   public readonly root: SVGGElement;
   private readonly hoverElement: SVGElement;
+  public symbol: number;
   private symbolElement: SVGElement | null = null;
-  private symbol: Symbol;
+  public static hover: Note | null = null;
 
   constructor(context: Context) {
     this.context = context;
@@ -25,12 +57,15 @@ export class Note {
     this.hoverElement = svg.circle({cx: 0, cy: 0, r: this.context.pad() * 0.4, fill: "transparent"})
     this.hoverElement.classList.add("hover");
     this.hoverElement.addEventListener("click", this.toggle.bind(this));
+    this.hoverElement.addEventListener("mouseenter", () => Note.hover = this);
+    this.hoverElement.addEventListener("mouseleave", () => Note.hover = null);
     this.root.appendChild(this.hoverElement);
     this.symbol = 0;
   }
 
   public load(data: any): void {
     this.symbol = data.symbol;
+    this.show(SYMBOLS[this.symbol](this.context));
   }
 
   public dump(): any {
@@ -39,13 +74,36 @@ export class Note {
     }
   }
 
-  public toggle(): void {
+  public assign(index: number): void {
+    this.symbol = index;
+    this.show(SYMBOLS[index](this.context));
+  }
+
+  public show(symbol: SVGElement | null): void {
     if (this.symbolElement === null) {
-      this.symbolElement = svg.circle({cx: 0, cy: 0, r: this.context.pad() * 0.3, fill: "transparent", stroke: "white"});
-      this.root.insertBefore(this.symbolElement, this.root.firstChild);
+      this.root.insertBefore(symbol, this.root.firstChild);
     } else {
-      this.root.removeChild(this.symbolElement);
-      this.symbolElement = null;
+      if (symbol != null) {
+        this.root.replaceChild(symbol, this.symbolElement);
+      } else {
+        this.root.removeChild(this.symbolElement);
+      }
+    }
+    this.symbolElement = symbol;
+  }
+
+  public toggle(): void {
+    this.assign((this.symbol + 1) % SYMBOLS.length);
+  }
+
+  public onkeypress(event: KeyboardEvent): void {
+    if ("0123456789".indexOf(event.key) !== -1) {
+      const index = parseInt(event.key);
+      if (index < SYMBOLS.length) {
+        this.assign(index);
+      }
+    } else if (event.key === "Backspace") {
+      this.assign(0);
     }
   }
 }

@@ -19,7 +19,11 @@ export class Notation {
   }
 
   public dump(): any {
-    return {lines: this.lines, beats: this.beats, subdivisions: this.subdivisions};
+    return {
+      lines: this.lines,
+      beats: this.beats,
+      subdivisions: this.subdivisions,
+    };
   }
 
   public load(data: any) {
