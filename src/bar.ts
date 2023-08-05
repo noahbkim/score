@@ -1,33 +1,25 @@
 import {Context, Notation} from "./context";
 import {Note} from "./note";
 import * as svg from './svg';
+import {Section} from "./section";
 
 export class Bar {
   private readonly context: Context;
-  private readonly notation: Notation;
+  public readonly notation: Notation;
   public readonly element: SVGSVGElement;
   public readonly notes: Array<Array<Note>>;
 
-  public constructor(context: Context, notation: Notation) {
-    this.context = context;
-    this.notation = notation;
+  public constructor(section: Section) {
+    this.context = section.context;
+    this.notation = section.notation.copy();
     this.element = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     this.element.classList.add("bar");
     this.element.style.marginRight = `-${2 * this.context.pad()}px`;
-
     this.notes = [];
-    for (let i = 0; i < this.notation.beats * this.notation.subdivisions; ++i) {
-      const frame = [];
-      for (let j = 0; j < this.notation.lines; ++j) {
-        const note = new Note(this.context);
-        frame.push(note);
-      }
-      this.notes.push(frame);
-    }
     this.clear();
   }
 
-  public clear(): void {
+  public draw(): void {
     this.element.replaceChildren();
     const width = this.notation.beats * this.notation.subdivisions * this.context.dx;
     const height = (this.notation.lines - 1) * this.context.dy + 1;
@@ -79,6 +71,30 @@ export class Bar {
         note.root.setAttribute("transform", `translate(${i * this.context.dx + 1}, ${j * this.context.dy})`);
       }
     }
+  }
+
+  public update(values: {notation?: Notation}): void {
+    if (values.notation) {
+      this.notation.update(values.notation);
+      this.clear(false);
+    }
+  }
+
+  public clear(notes: boolean = true): void {
+    const copy = [...this.notes];
+    this.notes.length = 0;
+    for (let i = 0; i < this.notation.beats * this.notation.subdivisions; ++i) {
+      const frame = [];
+      for (let j = 0; j < this.notation.lines; ++j) {
+        if (!notes && i < copy.length && j < copy[i].length) {
+          frame.push(copy[i][j]);
+        } else {
+          frame.push(new Note(this.context));
+        }
+      }
+      this.notes.push(frame);
+    }
+    this.draw();
   }
 
   public dump(): any {

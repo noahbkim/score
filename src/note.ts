@@ -8,38 +8,47 @@ const SYMBOLS: Array<(context: Context) => SVGElement | null> = [
   (context: Context) => svg.circle({
     cx: 0,
     cy: 0,
-    r: context.pad() * 0.4,
+    r: context.pad() * 0.2,
     fill: "transparent",
     stroke: "white",
     "stroke-width": "2px",
   }),
   // Square
   (context: Context) => svg.rect({
-    x: -context.pad() * 0.4,
-    y: -context.pad() * 0.4,
-    width: context.pad() * 0.8,
-    height: context.pad() * 0.8,
+    x: -context.pad() * 0.2,
+    y: -context.pad() * 0.2,
+    width: context.pad() * 0.4,
+    height: context.pad() * 0.4,
     fill: "transparent",
     stroke: "white",
     "stroke-width": "2px",
   }),
   // Right
   (context: Context) => svg.line({
-    x1: -context.pad() * 0.4,
-    y1: -context.pad() * 0.4,
-    x2: context.pad() * 0.4,
-    y2: context.pad() * 0.4,
+    x1: -context.pad() * 0.2,
+    y1: -context.pad() * 0.2,
+    x2: context.pad() * 0.2,
+    y2: context.pad() * 0.2,
     stroke: "white",
     "stroke-width": "4px",
   }),
   // Left
   (context: Context) => svg.line({
-    x1: -context.pad() * 0.4,
-    y1: context.pad() * 0.4,
-    x2: context.pad() * 0.4,
-    y2: -context.pad() * 0.4,
+    x1: -context.pad() * 0.2,
+    y1: context.pad() * 0.2,
+    x2: context.pad() * 0.2,
+    y2: -context.pad() * 0.2,
     stroke: "white",
     "stroke-width": "4px",
+  }),
+  // Diamond (placeholder)
+  (context: Context) => svg.circle({
+    cx: 0,
+    cy: 0,
+    r: context.pad() * 0.2,
+    fill: "white",
+    stroke: "white",
+    "stroke-width": "2px",
   }),
 ];
 

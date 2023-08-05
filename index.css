@@ -4,12 +4,15 @@ body {
     color: white;
 }
 
-button {
+input, button {
     border: 1px solid white;
     border-radius: 0.25rem;
     padding: 0.5rem 1rem;
     background-color: transparent;
     color: white;
+}
+
+button {
     cursor: pointer;
     user-select: none;
 }
@@ -17,6 +20,10 @@ button {
 button:hover {
     color: lightgray;
     background-color: rgba(255, 255, 255, 3%);
+}
+
+.accent {
+    color: red;
 }
 
 .sheet {

@@ -1,5 +1,5 @@
 export class Context {
-  public dx: number = 40;
+  public dx: number = 30;
   public dy: number = 30;
 
   public pad(): number {
@@ -34,5 +34,15 @@ export class Notation {
 
   public copy(): Notation {
     return new Notation(this.lines, this.beats, this.subdivisions);
+  }
+
+  public equalTo(other: Notation): boolean {
+    return this.beats == other.beats && this.subdivisions == other.subdivisions && this.lines == other.lines;
+  }
+
+  public update(other: Notation): void {
+    this.beats = other.beats;
+    this.subdivisions = other.subdivisions;
+    this.lines = other.lines;
   }
 }
