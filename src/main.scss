@@ -1,0 +1,7 @@
+@use "styles/theme.scss";
+
+body {
+  font-family: sans-serif;
+  color: theme.$color;
+  background-color: theme.$background-color;
+}
